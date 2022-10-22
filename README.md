@@ -1,3 +1,3 @@
-# msp432p401r-gate-teser
+# msp432p401r-gate-tester
 
-This is the firmware for an AND/OR gate tester for the TI MSP432P401R microcontroller. It makes use of the 'msp432p401r-hal' crate
+This is the firmware for an AND/OR gate tester for the TI MSP432P401R microcontroller. It makes use of the 'msp432p401r-hal' crate.
