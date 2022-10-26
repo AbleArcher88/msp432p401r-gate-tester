@@ -289,24 +289,20 @@ fn main() -> ! {
             hprintln!("Test result {:?}", testtable);
         } else if MODE_IND.load(Ordering::Relaxed) == 1 {
             srled.toggle();
-            testtable[1] = test_1(&dev_table);
-            gled.set_state(PinState::from(testtable[1]));
-            hprintln!("Test result {}", testtable[1]);
+            gled.set_state(PinState::from(test_1(&dev_table)));
+            hprintln!("Test result {}", test_1(&dev_table));
         } else if MODE_IND.load(Ordering::Relaxed) == 2 {
             srled.toggle();
-            testtable[1] = test_2(&dev_table);
-            gled.set_state(PinState::from(testtable[2]));
-            hprintln!("Test result {}", testtable[2]);
+            gled.set_state(PinState::from(test_2(&dev_table)));
+            hprintln!("Test result {}", test_1(&dev_table));
         } else if MODE_IND.load(Ordering::Relaxed) == 3 {
             srled.toggle();
-            testtable[1] = test_3(&dev_table);
-            hprintln!("Test result {}", testtable[3]);
-            gled.set_state(PinState::from(testtable[0]));
+            hprintln!("Test result {}", test_3(&dev_table));
+            gled.set_state(PinState::from(test_1(&dev_table)));
         } else if MODE_IND.load(Ordering::Relaxed) == 4 {
             srled.toggle();
-            testtable[1] = test_4(&dev_table);
-            gled.set_state(PinState::from(testtable[4]));
-            hprintln!("Test result {}", testtable[4]);
+            gled.set_state(PinState::from(test_4(&dev_table)));
+            hprintln!("Test result {}", test_4(&dev_table));
         }
         testall_led.set_state(PinState::from(testtable[0]));
         test1_led.set_state(PinState::from(testtable[1]));
