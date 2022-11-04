@@ -48,7 +48,7 @@ static GATE3_IN1: Mutex<RefCell<Option<hal::gpio::portc::P6_0<Output>>>> = Mutex
 static GATE3_IN2: Mutex<RefCell<Option<hal::gpio::portc::P6_1<Output>>>> = Mutex::new(RefCell::new(None));
 static GATE3_OUT1: Mutex<RefCell<Option<hal::gpio::portc::P6_4<Input<PullUp>>>>> = Mutex::new(RefCell::new(None));
 
-// Gate 4 test peripherals
+// Gte 4 test peripherals
 static GATE4_IN1: Mutex<RefCell<Option<hal::gpio::portc::P6_5<Output>>>> = Mutex::new(RefCell::new(None));
 static GATE4_IN2: Mutex<RefCell<Option<hal::gpio::portc::P6_6<Output>>>> = Mutex::new(RefCell::new(None));
 static GATE4_OUT1: Mutex<RefCell<Option<hal::gpio::portc::P6_7<Input<PullUp>>>>> = Mutex::new(RefCell::new(None));
@@ -348,6 +348,7 @@ fn main() -> ! {
                 }
             } else if MODE_IND.load(Ordering::Relaxed) == 3 {
                 srled.toggle();
+                gled.set_state(PinState::from(test_3(&dev_table)));
                 testtable[3] = test_3(&dev_table);
                 if cfg!(debug) {
                     hprintln!("Test result {}", test_3(&dev_table));
