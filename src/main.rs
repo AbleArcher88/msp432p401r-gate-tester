@@ -39,16 +39,16 @@ static GATE1_IN2: Mutex<RefCell<Option<hal::gpio::portc::P5_1<Output>>>> = Mutex
 static GATE1_OUT1: Mutex<RefCell<Option<hal::gpio::portc::P5_2<Input<PullUp>>>>> = Mutex::new(RefCell::new(None)); // Gate 1 Output 1
 
 // Gate 2 test peripheals
-static GATE2_IN1: Mutex<RefCell<Option<hal::gpio::portc::P5_4<Output>>>> = Mutex::new(RefCell::new(None)); // Diddo
+static GATE2_IN1: Mutex<RefCell<Option<hal::gpio::portc::P5_4<Output>>>> = Mutex::new(RefCell::new(None)); // Diddo, for gate 2
 static GATE2_IN2: Mutex<RefCell<Option<hal::gpio::portc::P5_5<Output>>>> = Mutex::new(RefCell::new(None));
 static GATE2_OUT1: Mutex<RefCell<Option<hal::gpio::portc::P5_6<Input<PullUp>>>>> = Mutex::new(RefCell::new(None));
 
 // Gate 3 test peripherals
-static GATE3_IN1: Mutex<RefCell<Option<hal::gpio::portc::P6_0<Output>>>> = Mutex::new(RefCell::new(None));
+static GATE3_IN1: Mutex<RefCell<Option<hal::gpio::portc::P6_0<Output>>>> = Mutex::new(RefCell::new(None)); // Diddo, for gate 3
 static GATE3_IN2: Mutex<RefCell<Option<hal::gpio::portc::P6_1<Output>>>> = Mutex::new(RefCell::new(None));
 static GATE3_OUT1: Mutex<RefCell<Option<hal::gpio::portc::P6_4<Input<PullUp>>>>> = Mutex::new(RefCell::new(None));
 
-// Gte 4 test peripherals
+// Gate 4 test peripherals
 static GATE4_IN1: Mutex<RefCell<Option<hal::gpio::portc::P6_5<Output>>>> = Mutex::new(RefCell::new(None));
 static GATE4_IN2: Mutex<RefCell<Option<hal::gpio::portc::P6_6<Output>>>> = Mutex::new(RefCell::new(None));
 static GATE4_OUT1: Mutex<RefCell<Option<hal::gpio::portc::P6_7<Input<PullUp>>>>> = Mutex::new(RefCell::new(None));
@@ -308,11 +308,11 @@ fn main() -> ! {
         if DEV_IND.load(Ordering::Relaxed) == 0 {
             bled.set_low();
             rled.set_high();
-            dev_table = OR_TABLE;
+            dev_table = AND_TABLE;
         } else if DEV_IND.load(Ordering::Relaxed) == 1 {
             rled.set_low();
             bled.set_high();
-            dev_table = AND_TABLE;
+            dev_table = OR_TABLE;
         } else if DEV_IND.load(Ordering::Relaxed) == DEV_MAX {
             srled.set_low();
             gled.set_low();
