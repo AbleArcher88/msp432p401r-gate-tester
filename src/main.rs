@@ -101,7 +101,7 @@ fn test_1 (truthtable: &[bool; 4]) -> bool {
         // 11 test
         pin1.as_mut().unwrap().set_high();
         pin2.as_mut().unwrap().set_high();
-        outtable[3] = pout1.as_ref().unwrap().is_high().unwrap();
+        outtable[3] = pout1.as_ref().unwrap().is_high().unwrap()
     });
     return outtable == *truthtable;
 }
@@ -216,7 +216,7 @@ fn main() -> ! {
         .smclk_prescaler(SMPrescaler::DIVS_2)
         .freeze();
 
-    if cfg!(debug) {
+    if cfg!(debug_assertions) {
         hprintln!("AND/OR Gate Tester Mk.1 ");
     }
 
@@ -319,7 +319,7 @@ fn main() -> ! {
             let devt_table: [bool; 4] = self_test();
             rled.set_state(PinState::from(devt_table == OR_TABLE));
             bled.set_state(PinState::from(devt_table == AND_TABLE));
-            if cfg!(debug) {
+            if cfg!(debug_assertions) {
                 hprintln!("OR Gate: {} | AND Gate: {}", dev_table == OR_TABLE, dev_table == AND_TABLE);
             }
         }
@@ -329,28 +329,28 @@ fn main() -> ! {
                 srled.set_high();
                 testtable = test_all(&dev_table);
                 gled.set_state(PinState::from(testtable[0]));
-                if cfg!(debug) {
+                if cfg!(debug_assertions) {
                     hprintln!("Test result {:?}", testtable);
                 }
             } else if MODE_IND.load(Ordering::Relaxed) == 1 {
                 srled.toggle();
                 gled.set_state(PinState::from(test_1(&dev_table)));
                 testtable[1] = test_1(&dev_table);
-                if cfg!(debug) {
+                if cfg!(debug_assertions) {
                     hprintln!("Test result {}", test_1(&dev_table));
                 }
             } else if MODE_IND.load(Ordering::Relaxed) == 2 {
                 srled.toggle();
                 gled.set_state(PinState::from(test_2(&dev_table)));
                 testtable[2] = test_2(&dev_table);
-                if cfg!(debug) {
+                if cfg!(debug_assertions) {
                     hprintln!("Test result {}", test_1(&dev_table));
                 }
             } else if MODE_IND.load(Ordering::Relaxed) == 3 {
                 srled.toggle();
                 gled.set_state(PinState::from(test_3(&dev_table)));
                 testtable[3] = test_3(&dev_table);
-                if cfg!(debug) {
+                if cfg!(debug_assertions) {
                     hprintln!("Test result {}", test_3(&dev_table));
                 }
                 gled.set_state(PinState::from(test_1(&dev_table)));
@@ -358,7 +358,7 @@ fn main() -> ! {
                 srled.toggle();
                 gled.set_state(PinState::from(test_4(&dev_table)));
                 testtable[4] = test_4(&dev_table);
-                if cfg!(debug) {
+                if cfg!(debug_assertions) {
                     hprintln!("Test result {}", test_4(&dev_table));
                 }
             }
@@ -395,7 +395,7 @@ fn PORT1_IRQ() {
             button2.as_mut().unwrap().clear_interrupt_pending_bit();
         }
     });
-    if cfg!(debug) {
+    if cfg!(debug_assertions) {
         hprintln!("Interrupt Triggered, DEV_IND = {}, MODE_IND = {}", DEV_IND.load(Ordering::Relaxed), MODE_IND.load(Ordering::Relaxed));
     }
 }
