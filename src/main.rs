@@ -212,12 +212,12 @@ fn main() -> ! {
 
     // Set the clock
     let _clock = periph.CS.constrain()
-        .mclk_dcosource_selection(DCOFrequency::_48MHz, MPrescaler::DIVM_1)
-        .smclk_prescaler(SMPrescaler::DIVS_2)
+        .mclk_dcosource_selection(DCOFrequency::_48MHz, MPrescaler::DIVM_0)
+        .smclk_prescaler(SMPrescaler::DIVS_1)
         .freeze();
 
     if cfg!(debug_assertions) {
-        hprintln!("AND/OR Gate Tester Mk.1 ");
+        hprintln!("AND/OR Gate Tester Mk.1");
     }
 
     // Split GPIO
@@ -317,10 +317,10 @@ fn main() -> ! {
             srled.set_low();
             gled.set_low();
             let devt_table: [bool; 4] = self_test();
-            rled.set_state(PinState::from(devt_table == OR_TABLE));
-            bled.set_state(PinState::from(devt_table == AND_TABLE));
+            bled.set_state(PinState::from(devt_table == OR_TABLE));
+            rled.set_state(PinState::from(devt_table == AND_TABLE));
             if cfg!(debug_assertions) {
-                hprintln!("OR Gate: {} | AND Gate: {}", dev_table == OR_TABLE, dev_table == AND_TABLE);
+                hprintln!("OR Gate: {} | AND Gate: {}", devt_table == OR_TABLE, devt_table == AND_TABLE);
             }
         }
         if DEV_IND.load(Ordering::Relaxed) != DEV_MAX {
