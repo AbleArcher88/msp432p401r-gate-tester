@@ -33,7 +33,7 @@ static DEV_IND: AtomicU8 = AtomicU8::new(0); // Device Under test
 static CFG_BUTTON_2: Mutex<RefCell<Option<hal::gpio::porta::P1_4<Input<PullUp>>>>> = Mutex::new(RefCell::new(None)); // The left push button, to switch test mode
 static MODE_IND: AtomicU8 = AtomicU8::new(0); // Testig mode
 
-// Gate 1 test peripherals
+// Gate 1 test peripherals. Take them as mutexes.
 static GATE1_IN1: Mutex<RefCell<Option<hal::gpio::portc::P5_0<Output>>>> = Mutex::new(RefCell::new(None)); // Gate 1 Input 1
 static GATE1_IN2: Mutex<RefCell<Option<hal::gpio::portc::P5_1<Output>>>> = Mutex::new(RefCell::new(None)); // Gate 1 Input 2
 static GATE1_OUT1: Mutex<RefCell<Option<hal::gpio::portc::P5_2<Input<PullUp>>>>> = Mutex::new(RefCell::new(None)); // Gate 1 Output 1
@@ -49,7 +49,7 @@ static GATE3_IN2: Mutex<RefCell<Option<hal::gpio::portc::P6_1<Output>>>> = Mutex
 static GATE3_OUT1: Mutex<RefCell<Option<hal::gpio::portc::P6_4<Input<PullUp>>>>> = Mutex::new(RefCell::new(None));
 
 // Gate 4 test peripherals
-static GATE4_IN1: Mutex<RefCell<Option<hal::gpio::portc::P6_5<Output>>>> = Mutex::new(RefCell::new(None));
+static GATE4_IN1: Mutex<RefCell<Option<hal::gpio::portc::P6_5<Output>>>> = Mutex::new(RefCell::new(None)); // Diddo for gate 4
 static GATE4_IN2: Mutex<RefCell<Option<hal::gpio::portc::P6_6<Output>>>> = Mutex::new(RefCell::new(None));
 static GATE4_OUT1: Mutex<RefCell<Option<hal::gpio::portc::P6_7<Input<PullUp>>>>> = Mutex::new(RefCell::new(None));
 
@@ -185,7 +185,7 @@ fn test_4 (truthtable: &[bool; 4]) -> bool {
     return outtable == *truthtable;
 }
 
-fn test_all (truthtable: &[bool; 4]) -> [bool; 5] {
+fn test_all (truthtable: &[bool; 4]) -> [bool; 5] { // test all options and return the results of each test, as well as a general assesment of the device on the basis of test results
     return [[true, true, true, true] == [test_1(truthtable), test_2(truthtable), test_3(truthtable), test_4(truthtable)], test_1(truthtable), test_2(truthtable), test_3(truthtable), test_4(truthtable)];
 }
 
@@ -273,7 +273,7 @@ fn main() -> ! {
 
 
     unsafe {
-        cortex_m::peripheral::NVIC::unmask(pac::interrupt::PORT1_IRQ);  // enable the port 1 interrupt
+        cortex_m::peripheral::NVIC::unmask(pac::interrupt::PORT1_IRQ);  // enable the port 1 interrupt on the NVIC (what is this?)
         cortex_m::interrupt::enable();
     }
     cortex_m::interrupt::free(|cs| { // Critical Section
@@ -298,6 +298,7 @@ fn main() -> ! {
         GATE4_OUT1.borrow(cs).replace(Some(gate4_out1));
     });
 
+    // initialise the LED array in a low state.
     srled.set_low();
     rled.set_low();
     gled.set_low();
@@ -305,7 +306,7 @@ fn main() -> ! {
 
     loop {
         let mut dev_table: [bool; 4] = [false, false, false, false];
-        if DEV_IND.load(Ordering::Relaxed) == 0 {
+        if DEV_IND.load(Ordering::Relaxed) == 0 { // check the device indicator atomic to indicate the mode of operation
             bled.set_low();
             rled.set_high();
             dev_table = AND_TABLE;
@@ -323,9 +324,9 @@ fn main() -> ! {
                 hprintln!("OR Gate: {} | AND Gate: {}", devt_table == OR_TABLE, devt_table == AND_TABLE);
             }
         }
-        if DEV_IND.load(Ordering::Relaxed) != DEV_MAX {
+        if DEV_IND.load(Ordering::Relaxed) != DEV_MAX { // if performing a functionality test:
             let mut testtable: [bool; 5] = [false, false, false, false, false];
-            if MODE_IND.load(Ordering::Relaxed) == 0 {
+            if MODE_IND.load(Ordering::Relaxed) == 0 { // check the Mode of test
                 srled.set_high();
                 testtable = test_all(&dev_table);
                 gled.set_state(PinState::from(testtable[0]));
